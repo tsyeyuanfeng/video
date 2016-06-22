@@ -14,9 +14,11 @@ export default class VideoList extends React.Component {
     }
 
     render() {
-        var videoList = this.props.videoList.map((video, index) => {
-            return <div className="video-wrapper"><Video key={'video-' + index} video={video} onSelect={this.onSelect.bind(this)} /></div>;
-        });
+        var videoList;
+        if (this.props.videoList && this.props.videoList.length > 0)
+            videoList = this.props.videoList.map((video, index) => {
+                return <div key={'video-' + index} className="video-wrapper"><Video video={video} onSelect={this.onSelect.bind(this)} /></div>;
+            });
 
         return (
             <div className="video-list">

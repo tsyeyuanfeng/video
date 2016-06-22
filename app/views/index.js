@@ -1,9 +1,14 @@
 import React from 'react';
 import Icon from 'react-fa';
-import request from 'superagent';
 
 import VideoList from '../components/VideoList';
 import Player from '../components/Player';
+import Toast from '../components/Toast';
+
+import VideoAction from '../actions/Video';
+
+import VideoStore from '../stores/Video';
+import ErrorStore from '../stores/Error';
 
 import './styles/main.less';
 
@@ -16,105 +21,77 @@ export default class index extends React.Component {
 
             loading: true,
 
-            page: 1,
+            page: 0,
 
             totalPage: 0,
 
             size: 10,
 
-            videoList: null,
+            videoList: [],
 
             isPlayerVisible: false,
 
-            playerUrl: 'http://www.w3school.com.cn/i/movie.mp4'
+            playerUrl: 'http://www.w3school.com.cn/i/movie.mp4',
+
+            pageEnd: false
         }
     }
 
-    componentWillMount() {
+    componentDidMount() {
+        this.unsubscribeVideoStore    = VideoStore.listen(this.onVideoStoreChange.bind(this));
+        this.unsubscribeErrorStore     = ErrorStore.listen(this.onErrorStoreChange.bind(this));
 
-        request
-            .get('videos')
-            .query({page: this.state.page, size: this.state.size})
-            .end((err, res)=>{
-                if (err) {
-                    console.log(err);
-                    this.setState({loading: false, error: err});
-                }
-                else {
-                    var result = res.body;
-                    if (result.status == 200) {
-                        var data = result.data;
-                        this.setState({loading: false, videoList: data.videoList, });
-                    }
-                    else {
-                        this.setState({loading: false, error: result.message});
-                    }
-                }
+        this.fetchVideoList(1, this.state.size);
+    }
+
+    componentWillUnmount() {
+        this.unsubscribeVideoStore();
+        this.unsubscribeErrorStore();
+    }
+
+    fetchVideoList (page, size) {
+        VideoAction.getVideoList(page, size);
+        this.setState({loading: true});
+    }
+
+    onVideoStoreChange(data) {
+        console.log(data);
+        var videoList = data.videoList;
+        var meta      = data.meta;
+
+        if (!videoList || videoList.length <= 0) {//提示错误
+            this.setState({loading: false, pageEnd: true}, function () {
             });
+        }
+        else {
+            this.setState({loading: false, videoList: this.state.videoList.concat(videoList), page: meta.page});
+        }
+    }
 
-        this.setState({loading: false, videoList: [
-            {
-                thumb: 'http://i0.letvimg.com/lc03_lejunew/201511/15/11/57/cug218gzembv-115729.jpg',
-                title: '人大李嘉欣人大李嘉欣人大李嘉欣',
-                url: 'http://www.w3school.com.cn/i/movie.mp4'
-            },
-
-            {
-                thumb: 'http://i0.letvimg.com/lc03_lejunew/201511/15/11/57/cug218gzembv-115729.jpg',
-                title: '人大李嘉欣人大李嘉欣人大李嘉欣',
-                url: 'http://www.w3school.com.cn/i/movie.mp4'
-            },
-
-            {
-                thumb: 'http://i0.letvimg.com/lc03_lejunew/201511/15/11/57/cug218gzembv-115729.jpg',
-                title: '人大李嘉欣人大李嘉欣人大李嘉欣',
-                url: 'http://www.w3school.com.cn/i/movie.mp4'
-            },
-
-            {
-                thumb: 'http://i0.letvimg.com/lc03_lejunew/201511/15/11/57/cug218gzembv-115729.jpg',
-                title: '人大李嘉欣人大李嘉欣人大李嘉欣',
-                url: 'http://www.w3school.com.cn/i/movie.mp4'
-            },
-            {
-                thumb: 'http://i0.letvimg.com/lc03_lejunew/201511/15/11/57/cug218gzembv-115729.jpg',
-                title: '人大李嘉欣人大李嘉欣人大李嘉欣',
-                url: 'http://www.w3school.com.cn/i/movie.mp4'
-            },
-
-            {
-                thumb: 'http://i0.letvimg.com/lc03_lejunew/201511/15/11/57/cug218gzembv-115729.jpg',
-                title: '人大李嘉欣人大李嘉欣人大李嘉欣',
-                url: 'http://www.w3school.com.cn/i/movie.mp4'
-            },
-
-            {
-                thumb: 'http://i0.letvimg.com/lc03_lejunew/201511/15/11/57/cug218gzembv-115729.jpg',
-                title: '人大李嘉欣人大李嘉欣人大李嘉欣',
-                url: 'http://www.w3school.com.cn/i/movie.mp4'
-            },
-
-            {
-                thumb: 'http://i0.letvimg.com/lc03_lejunew/201511/15/11/57/cug218gzembv-115729.jpg',
-                title: '人大李嘉欣人大李嘉欣人大李嘉欣',
-                url: 'http://www.w3school.com.cn/i/movie.mp4'
-            }
-        ]}, function() {
-
-        });
+    onErrorStoreChange(error) {
+        console.log(error);
+        if (this.state.videoList.length > 0) {
+            this.setState({loading: false}, function () {
+                this.refs.toast.show(error.message);
+            });
+        }
+        else
+            this.setState({error: error.message, loading: false});
     }
 
     onSelect(video) {
-        console.log(video);
         this.setState({playerUrl: video.url, isPlayerVisible: true});
     }
 
     onCancel() {
-        console.log('asdf');
         this.setState({
             isPlayerVisible: false,
             playerUrl: ''
         });
+    }
+
+    loadMore() {
+        this.fetchVideoList(this.state.page + 1, this.state.size);
     }
 
     render() {
@@ -126,7 +103,7 @@ export default class index extends React.Component {
                 </div>
             );
         }
-        else if(this.state.loading) {
+        else if(this.state.loading && this.state.videoList.length <= 0) {
             var mask = (
                 <div className="mask">
                     <div className="icon-loading">
@@ -138,7 +115,7 @@ export default class index extends React.Component {
         else if(!this.state.videoList || this.state.videoList.length <= 0) {
             var mask = (
                 <div className="mask">
-                    <div className="msg">抱歉, 没有读取到视频数据</div>
+                    <div className="msg">没有视频数据</div>
                 </div>
             );
         }
@@ -152,7 +129,15 @@ export default class index extends React.Component {
                     url={this.state.playerUrl}
                     onCancel={this.onCancel.bind(this)} />
 
-                {this.state.page < this.state.totalPage ? <button className="btn-load">{this.state.loading ? '加载中...' : '加载更多'}</button> : ''}
+                <Toast ref="toast"/>
+
+                {
+                    !this.state.pageEnd &&
+                    <button className="btn-load" onClick={this.loadMore.bind(this)}>
+                        {this.state.loading ? '加载中...' : '加载更多'}
+                    </button>
+                }
+
                 {mask}
             </div>
         );
