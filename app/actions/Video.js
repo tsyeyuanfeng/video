@@ -10,6 +10,37 @@ var actions = Reflux.createActions({
     getVideoList: {children: ["completed", "failed"]}
 });
 
+var mock = {
+    videoList: [
+        {
+            thumb: 'http://i0.letvimg.com/lc03_lejunew/201511/15/11/57/cug218gzembv-115729.jpg',
+            title: '人大李嘉欣人大李嘉欣人大李嘉欣人大李嘉欣人大李嘉欣人大李嘉欣人大李嘉欣人大李嘉欣人大李嘉欣人大李嘉欣人大李嘉欣人大李嘉欣人大李嘉欣人大李嘉欣人大李嘉欣人大李嘉欣人大李嘉欣人大李嘉欣人大李嘉欣人大李嘉欣人大李嘉欣人大李嘉欣人大李嘉欣人大李嘉欣',
+            duration: 10
+        },
+
+        {
+            thumb: 'http://i0.letvimg.com/lc03_lejunew/201511/15/11/57/cug218gzembv-115729.jpg',
+            title: '人大李嘉欣人大李嘉欣人大李嘉欣',
+            duration: 10
+        },
+
+        {
+            thumb: 'http://i0.letvimg.com/lc03_lejunew/201511/15/11/57/cug218gzembv-115729.jpg',
+            title: '人大李嘉欣人大李嘉欣人大李嘉欣',
+            duration: 10
+        },
+
+        {
+            thumb: 'http://i0.letvimg.com/lc03_lejunew/201511/15/11/57/cug218gzembv-115729.jpg',
+            title: '人大李嘉欣人大李嘉欣人大李嘉欣',
+            duration: 10
+        }
+    ],
+    meta: {
+        page: 1
+    }
+};
+
 /**
  * 获取K线数据
  * @param page Number

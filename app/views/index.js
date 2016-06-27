@@ -122,6 +122,7 @@ export default class index extends React.Component {
 
         return (
             <div className="index-page">
+                <header className="header">健康卫星传播网</header>
                 <VideoList videoList={this.state.videoList} onSelect={this.onSelect.bind(this)}/>
                 
                 <Player

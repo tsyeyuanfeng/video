@@ -15,7 +15,12 @@ export default class Video extends React.Component {
         return (
             <div className="video" onClick={this.onSelect.bind(this, this.props.video)}>
                 <div className="thumb" style={{backgroundImage: 'url(' + this.props.video.thumb + ')'}}></div>
-                <div className="title">{this.props.video.title}</div>
+                <div className="content">
+                    <div className="title">{this.props.video.title}</div>
+                    <div className="meta">
+                        <span>时长: {this.props.video.duration}分钟</span>
+                    </div>
+                </div>
             </div>
         );
     }
