@@ -29,13 +29,14 @@ export default class Player extends React.Component {
 
     render() {
 
-        var video = this.state.visible ? '<video src="' + this.state.url +  '" controls autoplay="autoplay" />' : '';
+        var video = this.state.visible ? <video src={this.state.url} controls autoPlay /> : '';
 
         return (
             <div
                 className={this.state.visible ? "player" : "player hidden"}
-                onClick={this.onCancel.bind(this)}
-                dangerouslySetInnerHTML={{__html: video}}/>
+                onClick={this.onCancel.bind(this)}>
+                {video}
+            </div>
         );
     }
 }

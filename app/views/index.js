@@ -64,7 +64,7 @@ export default class index extends React.Component {
             });
         }
         else {
-            this.setState({loading: false, videoList: this.state.videoList.concat(videoList), page: meta.page});
+            this.setState({loading: false, videoList: this.state.videoList.concat(videoList), page: parseInt(meta.page)});
         }
     }
 
@@ -91,7 +91,7 @@ export default class index extends React.Component {
     }
 
     loadMore() {
-        this.fetchVideoList(this.state.page + 1, this.state.size);
+        this.fetchVideoList(parseInt(this.state.page) + 1, this.state.size);
     }
 
     render() {

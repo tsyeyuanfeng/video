@@ -15,24 +15,28 @@ var mock = {
         {
             thumb: 'http://i0.letvimg.com/lc03_lejunew/201511/15/11/57/cug218gzembv-115729.jpg',
             title: '人大李嘉欣人大李嘉欣人大李嘉欣人大李嘉欣人大李嘉欣人大李嘉欣人大李嘉欣人大李嘉欣人大李嘉欣人大李嘉欣人大李嘉欣人大李嘉欣人大李嘉欣人大李嘉欣人大李嘉欣人大李嘉欣人大李嘉欣人大李嘉欣人大李嘉欣人大李嘉欣人大李嘉欣人大李嘉欣人大李嘉欣人大李嘉欣',
+            url: 'http://www.w3school.com.cn/i/movie.mp4',
             duration: 10
         },
 
         {
             thumb: 'http://i0.letvimg.com/lc03_lejunew/201511/15/11/57/cug218gzembv-115729.jpg',
             title: '人大李嘉欣人大李嘉欣人大李嘉欣',
+            url: 'http://www.w3school.com.cn/i/movie.mp4',
             duration: 10
         },
 
         {
             thumb: 'http://i0.letvimg.com/lc03_lejunew/201511/15/11/57/cug218gzembv-115729.jpg',
             title: '人大李嘉欣人大李嘉欣人大李嘉欣',
+            url: 'http://www.w3school.com.cn/i/movie.mp4',
             duration: 10
         },
 
         {
             thumb: 'http://i0.letvimg.com/lc03_lejunew/201511/15/11/57/cug218gzembv-115729.jpg',
             title: '人大李嘉欣人大李嘉欣人大李嘉欣',
+            url: 'http://www.w3school.com.cn/i/movie.mp4',
             duration: 10
         }
     ],
@@ -71,6 +75,7 @@ actions.getVideoList.listen(function(page, size) {
                 ErrorAction.connectionError('网络连接错误');
             }
         );
+    //this.completed(mock);
 });
 
 export default actions;

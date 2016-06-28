@@ -14,7 +14,7 @@ export default class Video extends React.Component {
     render() {
         return (
             <div className="video" onClick={this.onSelect.bind(this, this.props.video)}>
-                <div className="thumb" style={{backgroundImage: 'url(' + this.props.video.thumb + ')'}}></div>
+                <img className="thumb" src={this.props.video.thumb}/>
                 <div className="content">
                     <div className="title">{this.props.video.title}</div>
                     <div className="meta">
